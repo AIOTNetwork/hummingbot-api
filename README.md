@@ -136,3 +136,81 @@ docker ps | grep hummingbot
 
 - **API Docs**: http://localhost:8000/docs
 - **Issues**: https://github.com/hummingbot/hummingbot-api/issues
+
+## Dashboard
+
+## Authentication
+
+Authentication is disabled by default. To enable Dashboard Authentication please follow the steps below: 
+
+**Set Credentials (Optional):**
+
+The dashboard uses `admin` and `abc` as the default username and password respectively. It's strongly recommended to change these credentials for enhanced security.:
+
+- Navigate to the `deploy` folder and open the `credentials.yml` file.
+- Add or modify the current username / password and save the changes afterward
+  
+  ```
+  credentials:
+    usernames:
+      admin:
+        email: admin@gmail.com
+        name: John Doe
+        logged_in: False
+        password: abc
+  cookie:
+    expiry_days: 0
+    key: some_signature_key # Must be string
+    name: some_cookie_name
+  pre-authorized:
+    emails:
+    - admin@admin.com
+  ```  
+### Enable Authentication
+
+- Ensure the dashboard container is not running.
+- Open the `docker-compose.yml` file within the `deploy` folder using a text editor.
+- Locate the environment variable `AUTH_SYSTEM_ENABLED` under the dashboard service configuration.
+  
+  ```
+  services:
+  dashboard:
+    container_name: dashboard
+    image: hummingbot/dashboard:latest
+    ports:
+      - "8501:8501"
+    environment:
+        - AUTH_SYSTEM_ENABLED=True
+        - BACKEND_API_HOST=hummingbot-api
+        - BACKEND_API_PORT=8000
+  ```
+- Change the value of `AUTH_SYSTEM_ENABLED` from `False` to `True`.
+- Save the changes to the `docker-compose.yml` file.
+- Relaunch Dashboard by running `bash setup.sh`
+  
+### Known Issues
+- Refreshing the browser window may log you out and display the login screen again. This is a known issue that might be addressed in future updates.
+
+
+## Dashboard Functionalities
+
+- **Config Generator:**
+  - Create and select configurations for different v2 strategies.
+  - Backtest and deploy the selected configurations.
+
+- **Bot Management:**
+  - Visualize bot performance in real-time.
+  - Stop and archive running bots.
+
+## Tutorial
+
+To get started with deploying your first bot, follow these step-by-step instructions:
+
+1. **Prepare your bot configurations:**
+   - Select a controller and backtest your controller configs.
+
+2. **Deploy a bot:**
+   - Use the dashboard UI to select and deploy your configurations.
+
+3. **Monitor and Manage:**
+   - Track bot performance and make adjustments as needed through the dashboard.
